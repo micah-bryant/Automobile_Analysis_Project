@@ -6,6 +6,7 @@ from dataOrg import scaler, invScale
 from dataAnalysis import residuals_ind, residuals_full, calcPred, OLS_ind, OLS_full
 
 def R2YCalc_ind(values,data,column,order):
+    ''' Returns the R2Y value for the least squares '''
     newData = scaler(data)
     residuals = residuals_ind(values,newData,column,order)
     for i in range(len(residuals)):
@@ -14,6 +15,7 @@ def R2YCalc_ind(values,data,column,order):
     return r2y
 
 def R2YCalc_full(values,data):
+    ''' Returns the R2Y value for the entire data least squares '''
     newData = scaler(data)
     residuals = residuals_full(values,newData)
     for i in range(len(residuals)):
@@ -22,6 +24,7 @@ def R2YCalc_full(values,data):
     return r2y
 
 def dataPlot_ind(values,data,column,order):
+    ''' Plots the measured data and the predicted curve of the least squares analysis '''
     if column == 1:
         label = "Cylinders"
     elif column == 2:
@@ -49,6 +52,7 @@ def dataPlot_ind(values,data,column,order):
     plt.xlabel(label)
     
 def OLS_LOOCV(data,column,order):
+    ''' Performs LOOCV on the data and returns R2Y value '''
     R2Y = 0
     predVal = []
     for i in range(len(data[:,0])):
@@ -72,6 +76,7 @@ def OLS_LOOCV(data,column,order):
     return R2Y
 
 def OLS_groupCV(data,column,order):
+    ''' Does cross validation by leaving a city out and returns R2Y value '''
     R2Y = 0
     diff = []
     cities = [1,2,3]
@@ -99,6 +104,7 @@ def OLS_groupCV(data,column,order):
     return diff
 
 def PLSR_LOOCV(data):
+    ''' Performs LOOCV on the data and returns R2Y value '''
     R2Y = 0
     predVal = []
     for i in range(len(data[:,0])):
@@ -125,6 +131,7 @@ def PLSR_LOOCV(data):
     return R2Y
 
 def PLSR_groupCV(data):
+    ''' Does cross validation by leaving a city out and returns R2Y value '''
     R2Y = 0
     diff = []
     cities = [1,2,3]

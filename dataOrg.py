@@ -11,23 +11,26 @@ from sklearn.preprocessing import StandardScaler
 #7 = City of Origin (1,2,3)
 
 def textFileParse(filename):
+    ''' Returns 2D matrix of data '''
     data = np.loadtxt(filename, usecols = (0,1,2,3,4,5,6,7))
     return data
 
 def splitYear(data, year):
+    ''' returns 2D matrix of the data that matches the year'''
     newData = []
-    for i in range(398):
+    for i in range(len(data[:,0])):
         if data[i,6] == year:
             newData.append(data[i,:])
     newData = np.array(newData, dtype = 'float64')
     return newData
 
 def splitCylinder(data):
+    ''' Returns a list of 2D matrices organized by data corresponding to a # of cylinders '''
     newData = []
     cylinder = [4,6,8]
     for numCyl in cylinder:
         dataPlane = []
-        for i in range(398):
+        for i in range(len(data[:,0])):
             if data[i,1] == numCyl:
                 dataPlane.append(data[i,:])
         dataPlane = np.array(dataPlane)
@@ -35,10 +38,12 @@ def splitCylinder(data):
     return newData
 
 def splitCat(data,column):
+    ''' Returns a single column of data '''
     newData = data[:,column]
     return newData
 
 def scaler(data):
+    ''' Returns the Z-scored data '''
     newData = []
     for i in range(6):
         scaler = StandardScaler()
@@ -50,6 +55,7 @@ def scaler(data):
     return np.transpose(newData)
 
 def invScale(data,data_scaled):
+    ''' Returns the actual predicted MPG when given Z-scored data '''
     scaler = StandardScaler()
     values = np.zeros((len(data[:,0]),1))
     values[:,0] = data[:,0]
@@ -60,6 +66,7 @@ def invScale(data,data_scaled):
     return scaledVal
 
 def valConv(values,data,column):
+    ''' Returns the constants for the equation for actual data instead of Z-scored data '''
     C1,C2,C3 = values
     meanA = np.mean(data[:,column])
     meanB = np.mean(data[:,0])
