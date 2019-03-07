@@ -6,7 +6,8 @@ from scipy.optimize import least_squares
 from dataOrg import scaler
 
 #PLSR
-def func_PLSR(data): #needs the data to be scaled before hand (makes it easier to do cross validation)
+def func_PLSR(data):
+    ''' Performs PLSR on the data and plot the scores and loadings plots '''
     newData = scaler(data)
     PLSR = PLSRegression(n_components = 2)
     PLSR.fit(newData[:,1:6],newData[:,0])
@@ -30,6 +31,7 @@ def func_PLSR(data): #needs the data to be scaled before hand (makes it easier t
     plt.legend(loc = 'best');
 
 def cyl_PLSR(data):
+    ''' Performs PLSR on the data separated into individual cylinders and plot the scores and loadings plots '''
     newData = scaler(data)
     PLSR = PLSRegression(n_components = 2)
     PLSR.fit(newData[:,2:6],newData[:,0])
@@ -53,6 +55,7 @@ def cyl_PLSR(data):
     
 #Least Squares
 def calcPred(values,data,column,order):
+    ''' Returns the predicted MPG would be given the data and values to multiply by '''
     if order == 1:
         beta,offset = values
     elif order == 2:
@@ -76,11 +79,13 @@ def calcPred(values,data,column,order):
     return predVal
 
 def residuals_ind(values,data,column, order):
+    ''' Subtracts the predicted from the actual data and returns the differences '''
     predVal = calcPred(values,data,column,order)
     residuals = predVal - data[:,0]
     return residuals
 
 def residuals_full(values,data):
+    ''' Subtracts the predicted from the actual data and returns the differences '''
     beta1,beta2,beta3,beta4,beta5,offset = values
     predVal = []
     for i in range(len(x[:,0])):
@@ -91,6 +96,7 @@ def residuals_full(values,data):
     return residuals
 
 def OLS_ind(data,column,order):
+    ''' Performs least squares analysis on the data and returns the predicted constants for the equation '''
     if order == 1:
         y0 = np.zeros(2)
     elif order == 2:
@@ -104,6 +110,7 @@ def OLS_ind(data,column,order):
     return opt.x
 
 def OLS_full(data):
+    ''' Performs least squares analysis on the data and returns the predicted constants for the equation '''
     y0 = np.zeros(6)
     data = scaler(data)
     opt = least_squares(residuals_full,y0,args = (data,))
